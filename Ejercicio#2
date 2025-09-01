@@ -1,0 +1,105 @@
+import java.util.*;
+
+class GrafoMatriz {
+    private int numVertices;
+    private String[] vertices;
+    private int[][] matriz;
+    private int contadorVertices;
+
+    public GrafoMatriz(int maxVertices) {
+        numVertices = maxVertices;
+        vertices = new String[numVertices];
+        matriz = new int[numVertices][numVertices];
+        contadorVertices = 0;
+    }
+
+    public void agregarVertice(String nombre) {
+        if (contadorVertices < numVertices) {
+            vertices[contadorVertices++] = nombre;
+        } else {
+            System.out.println("No se pueden agregar más vértices.");
+        }
+    }
+
+    public void agregarArista(String origen, String destino) {
+        int i = buscarVertice(origen);
+        int j = buscarVertice(destino);
+
+        if (i != -1 && j != -1) {
+            matriz[i][j] = 1;
+            matriz[j][i] = 1; 
+        } else {
+            System.out.println("Error: uno de los vértices no existe.");
+        }
+    }
+
+    private int buscarVertice(String nombre) {
+        for (int i = 0; i < contadorVertices; i++) {
+            if (vertices[i].equals(nombre)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void mostrarMatriz() {
+        System.out.println("\nMatriz de Adyacencia:");
+
+        
+        System.out.print("   ");
+        for (int i = 0; i < contadorVertices; i++) {
+            System.out.print(vertices[i] + " ");
+        }
+        System.out.println();
+
+        
+        for (int i = 0; i < contadorVertices; i++) {
+            System.out.print(vertices[i] + " ");
+            for (int j = 0; j < contadorVertices; j++) {
+                System.out.print(" " + matriz[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class MainMatriz {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        
+        System.out.print("Ingrese el número de vértices: ");
+        int n = sc.nextInt();
+        sc.nextLine(); 
+
+        GrafoMatriz g = new GrafoMatriz(n);
+
+        
+        System.out.println("Ingrese los nombres de los vértices:");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Vértice " + (i + 1) + ": ");
+            String nombre = sc.nextLine().trim();
+            g.agregarVertice(nombre);
+        }
+
+        
+        System.out.println("\nIngrese las aristas en formato 'origen destino'. Escriba 'FIN' para terminar:");
+        while (true) {
+            String linea = sc.nextLine().trim();
+            if (linea.equalsIgnoreCase("FIN")) {
+                break;
+            }
+            String[] partes = linea.split(" ");
+            if (partes.length == 2) {
+                g.agregarArista(partes[0], partes[1]);
+            } else {
+                System.out.println("Formato incorrecto. Ejemplo válido: A B");
+            }
+        }
+
+        
+        g.mostrarMatriz();
+
+        sc.close();
+    }
+}
