@@ -1,0 +1,69 @@
+import java.util.*;
+
+class GrafoLista {
+    private Map<String, List<String>> listaAdyacencia;
+
+    public GrafoLista() {
+        listaAdyacencia = new HashMap<>();
+    }
+
+    public void agregarVertice(String vertice) {
+        listaAdyacencia.putIfAbsent(vertice, new ArrayList<>());
+    }
+
+    public void agregarArista(String origen, String destino) {
+        if (listaAdyacencia.containsKey(origen) && listaAdyacencia.containsKey(destino)) {
+            listaAdyacencia.get(origen).add(destino);
+            listaAdyacencia.get(destino).add(origen); // No dirigido
+        } else {
+            System.out.println("Error: uno de los vértices no existe.");
+        }
+    }
+
+    public void mostrarGrafo() {
+        System.out.println("\nLista de Adyacencia:");
+        for (String vertice : listaAdyacencia.keySet()) {
+            System.out.println(vertice + " -> " + listaAdyacencia.get(vertice));
+        }
+    }
+}
+
+public class MainLista {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        GrafoLista g = new GrafoLista();
+
+        
+        System.out.print("Ingrese el número de vértices: ");
+        int n = sc.nextInt();
+        sc.nextLine(); 
+
+        
+        System.out.println("Ingrese los nombres de los vértices:");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Vértice " + (i + 1) + ": ");
+            String nombre = sc.nextLine().trim();
+            g.agregarVertice(nombre);
+        }
+
+        
+        System.out.println("\nIngrese las aristas en formato 'origen destino'. Escriba 'FIN' para terminar:");
+        while (true) {
+            String linea = sc.nextLine().trim();
+            if (linea.equalsIgnoreCase("FIN")) {
+                break;
+            }
+            String[] partes = linea.split(" ");
+            if (partes.length == 2) {
+                g.agregarArista(partes[0], partes[1]);
+            } else {
+                System.out.println("Formato incorrecto. Ejemplo válido: A B");
+            }
+        }
+
+        
+        g.mostrarGrafo();
+
+        sc.close();
+    }
+}
